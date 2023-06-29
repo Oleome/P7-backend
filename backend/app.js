@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/book');
+const userRoutes = require('./routes/user');
 
 mongoose.connect('mongodb+srv://Bilou_Oleome:BwjE0eysupzWrdtw@cluster0.vrb3kzr.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -21,8 +22,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api/book', bookRoutes);
-
+app.use('/api/BOOK', bookRoutes);
+app.use('/api/SIGN_IN', userRoutes);
 
 
 
