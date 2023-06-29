@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use('/api/book', bookRoutes);
-app.use('/api/Connexion', userRoutes);
+app.use('/api/auth', userRoutes);
 
 
 
