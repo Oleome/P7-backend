@@ -5,7 +5,11 @@ exports.createBook = (req, res, next) => {
       title: req.body.title,
       description: req.body.description,
       imageUrl: req.body.imageUrl,
-      price: req.body.price,
+      author: req.body.author,
+      year: req.body.year,
+      livregenre: req.body.livregenre,
+      ratings: req.body.ratings,
+      averageRating: req.body.averageRating,
       userId: req.body.userId
     });
     book.save().then(
@@ -45,7 +49,11 @@ exports.modifyBook = (req, res, next) => {
       title: req.body.title,
       description: req.body.description,
       imageUrl: req.body.imageUrl,
-      price: req.body.price,
+      author: req.body.author,
+      year: req.body.year,
+      livregenre: req.body.livregenre,
+      ratings: req.body.ratings,
+      averageRating: req.body.averageRating,
       userId: req.body.userId
     });
     Book.updateOne({_id: req.params.id}, book).then(
