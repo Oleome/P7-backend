@@ -22,8 +22,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api/BOOK', bookRoutes);
-app.use('/api/SIGN_IN', userRoutes);
+app.use('/api/book', bookRoutes);
+app.use('/api/Connexion', userRoutes);
 
 
 
