@@ -13,7 +13,6 @@ import UpdateBook from './pages/updateBook/UpdateBook';
 import { useUser } from './lib/customHooks';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
-
 function App() {
   const [user, setUser] = useState(null);
   const { connectedUser } = useUser();
