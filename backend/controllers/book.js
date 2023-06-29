@@ -2,6 +2,7 @@ const Book = require('../models/Book');
 
 exports.createBook = (req, res, next) => {
     const book = new Book({
+      _id: req.params.id,
       title: req.body.title,
       description: req.body.description,
       imageUrl: req.body.imageUrl,
@@ -25,14 +26,15 @@ exports.createBook = (req, res, next) => {
         });
       }
     );
+    next();
 };
 
 exports.getOneBook = (req, res, next) => {
     Book.findOne({
       _id: req.params.id
     }).then(
-      (thing) => {
-        res.status(200).json(thing);
+      (book) => {
+        res.status(200).json(book);
       }
     ).catch(
       (error) => {
@@ -41,6 +43,7 @@ exports.getOneBook = (req, res, next) => {
         });
       }
     );
+    next();
 };
 
 exports.modifyBook = (req, res, next) => {
@@ -59,7 +62,7 @@ exports.modifyBook = (req, res, next) => {
     Book.updateOne({_id: req.params.id}, book).then(
       () => {
         res.status(201).json({
-          message: 'Thing updated successfully!'
+          message: 'Book updated successfully!'
         });
       }
     ).catch(
@@ -69,6 +72,7 @@ exports.modifyBook = (req, res, next) => {
         });
       }
     );
+    next();
 };
 
 exports.deleteBook = (req, res, next) => {
@@ -85,6 +89,7 @@ exports.deleteBook = (req, res, next) => {
         });
       }
     );
+    next();
 };
 
 exports.getAllBooks = (req, res, next) => {
