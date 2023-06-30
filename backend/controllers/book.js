@@ -1,22 +1,14 @@
 const Book = require('../models/Book');
 
 exports.createBook = (req, res, next) => {
-    const book = new Book({
-      _id: req.params.id,
-      title: req.body.title,
-      description: req.body.description,
-      imageUrl: req.body.imageUrl,
-      author: req.body.author,
-      year: req.body.year,
-      livregenre: req.body.livregenre,
-      ratings: 
-      [    
-        req.body.userId,     
-        req.body.grade 
-      ],
-      averageRating: req.body.averageRating,
-      userId: req.body.userId
-    });
+  const bookObject = JSON.parse(req.body.thing);
+  delete bookObject._id;
+  delete bookObject._userId;
+  const book = new Book({
+    ...bookObject,
+    userId: req.auth.userId,
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  });
     book.save().then(
       () => {
         res.status(201).json({
