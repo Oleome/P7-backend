@@ -9,7 +9,11 @@ exports.createBook = (req, res, next) => {
       author: req.body.author,
       year: req.body.year,
       livregenre: req.body.livregenre,
-      ratings: req.body.ratings,
+      ratings: 
+      [    
+        req.body.userId,     
+        req.body.grade 
+      ],
       averageRating: req.body.averageRating,
       userId: req.body.userId
     });
