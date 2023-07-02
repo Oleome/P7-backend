@@ -7,14 +7,8 @@ const booksSchema = mongoose.Schema({
     author: String,
     imageUrl: String,
     year: Number,
-    livregenre: String,
-    ratings : 
-        [ 
-            {   
-                userId: String,     
-                grade: Number
-            }
-        ],
+    genre: String,
+    ratings : String || Number,       
     averageRating: Number
 });
 
