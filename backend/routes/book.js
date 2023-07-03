@@ -39,14 +39,14 @@ router.get('/' +
     );
 });
 router.get('/bestrating');
-router.post('/', auth, multer, (req, res, next) => {
+router.post('/', multer, (req, res, next) => {
     console.log('req.body', req.body);
     console.log('req.file.filename', req.file.filename);
    // let bookObject = req.body === {} ? {} : JSON.parse(req.body.books);
    /* delete bookObject._id;
     delete bookObject._userId;*/
     const book = new Book({
-        userId: User.userId,
+        ...req.body,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     book.save()
