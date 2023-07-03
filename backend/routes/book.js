@@ -24,7 +24,6 @@ router.get('/:id', (req, res, next) => {
   });
 router.get('/' +
   '', (req, res, next) => {
-    console.log(req, res);
     Book.find()
         .then(
             (books) => {
@@ -40,33 +39,16 @@ router.get('/' +
 });
 router.get('/bestrating');
 router.post('/', multer, (req, res, next) => {
-    console.log('req.body', req.body);
-    console.log('req.file.filename', req.file.filename);
-   // let bookObject = req.body === {} ? {} : JSON.parse(req.body.books);
-   /* delete bookObject._id;
-    delete bookObject._userId;*/
+    let bookObject = req.body === {} ? {} : JSON.parse(req.body.book);
+    delete bookObject._id;
+    delete bookObject._userId;
     const book = new Book({
-        ...req.body,
+        ...bookObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     book.save()
-        .then(
-            () => {
-                if(res.status === 200) {
-                    res.status(200).json({
-                        message: 'Post saved successfully!'
-                    });
-                }
-                else if(res.status === 201) {
-                    res.status(201).json({
-                        message: '201 Post saved successfully!'
-                    });
-                }    
-                else {
-                    console.log(res)
-                }
-            }
-        ).catch(
+        .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+        .catch(
         (error) => {
           res.status(400).json({
           error: error
