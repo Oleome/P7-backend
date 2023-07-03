@@ -1,18 +1,82 @@
 const express = require('express');
 const router = express.Router();
 
+const Book = require('../models/Book');
+const User = require('../models/User');
+
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
-const bookCtrl = require('../controllers/book');
-
-router.get('/:id', bookCtrl.getOneBook);
-router.get('/' , bookCtrl.getAllBooks);
-router.get('/bestrating', bookCtrl.bestRating);
-router.post('/', auth, multer, bookCtrl.createBook);
-router.put('/:id', auth, multer, bookCtrl.modifyBook);
-router.delete('/:id', auth, multer, bookCtrl.deleteBook);
-router.post('/:id/rating', auth, multer, bookCtrl.singleRating);
+router.get('/:id', (req, res, next) => {
+    Book.findOne({
+      _id: req.params.id
+    }).then(
+      (book) => {
+        res.status(200).json(book);
+      }
+    ).catch(
+      (error) => {
+        res.status(404).json({
+          error: error
+        });
+      }
+    );
+  });
+router.get('/' +
+  '', (req, res, next) => {
+    console.log(req, res);
+    Book.find()
+        .then(
+            (books) => {
+                res.status(200).json(books);
+            }
+        ).catch(
+            (error) => {
+                res.status(400).json({
+                    error: error
+            });
+        }
+    );
+});
+router.get('/bestrating');
+router.post('/', (req, res, next) => {
+    console.log(req.body);
+    console.log(Book.file);
+   // let bookObject = req.body === {} ? {} : JSON.parse(req.body.books);
+   /* delete bookObject._id;
+    delete bookObject._userId;*/
+    const book = new Book({
+        userId: User.userId,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${Book.file.filename}`
+    });
+    book.save()
+        .then(
+            () => {
+                if(res.status === 200) {
+                    res.status(200).json({
+                        message: 'Post saved successfully!'
+                    });
+                }
+                else if(res.status === 201) {
+                    res.status(201).json({
+                        message: '201 Post saved successfully!'
+                    });
+                }    
+                else {
+                    console.log(res)
+                }
+            }
+        ).catch(
+        (error) => {
+          res.status(400).json({
+          error: error
+        });
+      }
+    );
+});
+router.put('/:id');
+router.delete('/:id');
+router.post('/:id/rating');
 
 
 module.exports = router;
