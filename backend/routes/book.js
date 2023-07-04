@@ -55,25 +55,10 @@ router.put('/:id', (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 });
 
-router.delete('/:id', auth, multer, (req, res, next) => {
-  Book.findOne({ _id: req.params.id})
-    .then(book => {
-      console.log('book.userId', book.userId)
-          console.log('req.auth.userId', req.auth.userId)
-        if (book.userId != req.auth.userId) {
-          res.status(401).json({message: 'Not authorized'});
-        } else {
-          const filename = book.imageUrl.split('/images/')[1];
-          fs.unlink(`images/${filename}`, () => {
-            Book.deleteOne({_id: req.params.id})
-              .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-              .catch(error => res.status(401).json({ error }));
-          });
-        }
-    })
-    .catch( error => {
-        res.status(500).json({ error });
-    })
+router.delete('/:id', (req, res, next) => {
+  Book.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Livre supprimé !'}))
+    .catch(error => res.status(400).json({ error }));
   }
 )
 router.post('/:id/rating');
