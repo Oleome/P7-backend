@@ -22,22 +22,12 @@ router.get('/:id', (req, res, next) => {
       }
     );
   });
-router.get('/' +
-  '', (req, res, next) => {
+router.get('/' + '', (req, res, next) => {
     Book.find()
-        .then(
-            (books) => {
-                res.status(200).json(books);
-            }
-        ).catch(
-            (error) => {
-                res.status(400).json({
-                    error: error
-            });
-        }
-    );
+        .then((books) => {res.status(200).json(books)})
+        .catch((error) => {res.status(400).json({ error: error })});
 });
-router.get('/bestrating');
+
 router.post('/', multer, (req, res, next) => {
     let bookObject = req.body === {} ? {} : JSON.parse(req.body.book);
     delete bookObject._id;
@@ -56,6 +46,9 @@ router.post('/', multer, (req, res, next) => {
       }
     );
 });
+
+router.get('/bestrating');
+
 router.put('/:id');
 router.delete('/:id');
 router.post('/:id/rating');
