@@ -66,8 +66,10 @@ router.delete('/:id', auth, (req, res, next) => {
     });
 });
 
-router.post('/:id/rating', (req, res) => {
+router.post('/:id/rating', (req, res, next) => {
   Book.updateOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Votre note a bien été enregistrée !'}))
+    .catch(error => res.status(400).json({ error }));
 });
 
 module.exports = router;
