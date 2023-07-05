@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
 
 const Book = require('../models/Book');
 const User = require('../models/User');
@@ -48,7 +47,7 @@ router.put('/:id', (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', auth, (req, res, next) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => {
       if(book.userId != req.auth.userId) {
@@ -62,7 +61,7 @@ router.delete('/:id', (req, res, next) => {
         })
       }
     })
-    .catch( error => {
+   .catch( error => {
       res.status(500).json({ error });
     });
 });
