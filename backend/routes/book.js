@@ -8,6 +8,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 const fs = require('fs');
+const { error } = require('console');
 
 router.get('/:id', (req, res, next) => {
     Book.findOne({ _id: req.params.id })
@@ -67,9 +68,18 @@ router.delete('/:id', auth, (req, res, next) => {
 });
 
 router.post('/:id/rating', (req, res, next) => {
-  Book.updateOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Votre note a bien été enregistrée !'}))
-    .catch(error => res.status(400).json({ error }));
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      const oldRatings = book.ratings;
+      const newRatings = oldRatings.push(req.params.rating)
+      console.log('rating', rating)
+      book.ratings = newRatings;
+      console.log(oldRatings, newRatings, book)
+      Book.updateOne({ _id: req.params.id }, { book, _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Votre note a bien été enregistrée !'}))
+        .catch(error => res.status(400).json({ error }));
+    })
+   // .catch(error => res.status(400).json({ error }))
 });
 
 module.exports = router;
