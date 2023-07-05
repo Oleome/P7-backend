@@ -53,6 +53,8 @@ router.delete('/:id', (req, res, next) => {
 
 router.get('/bestrating');
 
-router.post('/:id/rating');
+router.post('/:id/rating', (req, res) => {
+  Book.updateOne({ _id: req.params.id })
+});
 
 module.exports = router;
