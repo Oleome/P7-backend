@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const { ObjectId } = require('mongodb');
 
 const Book = require('../models/Book');
 const User = require('../models/User');
 
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
+
+const fs = require('fs');
 
 router.get('/:id', (req, res, next) => {
     Book.findOne({ _id: req.params.id })
@@ -46,12 +49,23 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  Book.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Livre supprimé !'}))
-    .catch(error => res.status(400).json({ error }));
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if(book.userId != req.auth.userId) {
+        res.status(401).json({ message: 'Non autorisé !' });
+      } else {
+        const filename = book.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          Book.deleteOne({ _id: req.params.id })
+            .then(() => res.status(200).json({ message: 'Livre supprimé !'}))
+            .catch(error => res.status(400).json({ error }));
+        })
+      }
+    })
+    .catch( error => {
+      res.status(500).json({ error });
+    });
 });
-
-router.get('/bestrating');
 
 router.post('/:id/rating', (req, res) => {
   Book.updateOne({ _id: req.params.id })
