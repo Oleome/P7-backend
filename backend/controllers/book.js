@@ -58,7 +58,7 @@ exports.addRating = (req, res, next) => {
             if(hasRated) {
                 return res.status(400).json({ message: 'Vous avez déjà donné une note à ce livre !'})
             } else {
-                Book.findOneAndUpdate({ _id: req.params.id }, { $push: { ratings: {userId: req.body.userId, grade: req.body.rating} } })
+                Book.findOneAndUpdate({ _id: req.params.id }, { $push: { ratings: {userId: req.body.userId, grade: req.body.rating} }, _id: req.params.id })
                     .then(() => { res.status(200).json({ message: 'Votre note a bien été enregistrée !' })})
                     .catch(error => res.status(400).json({ error }));
             }
