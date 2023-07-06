@@ -53,15 +53,15 @@ exports.deleteOneBook = (req, res, next) => {
 
 exports.addRating = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
-        .then((book) => {
-            const oldRatings = book.ratings;
-            const newRatings = oldRatings.push(req.params.rating)
-            console.log('rating', req.params.rating)
-            book.ratings = newRatings;
-            console.log(oldRatings, newRatings, book)
-            Book.updateOne({ _id: req.params.id }, { book, _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Votre note a bien été enregistrée !'}))
-            .catch(error => res.status(400).json({ error }));
+        .then(book => {
+            const hasRated = book.ratings.some((rating) => rating.userId.toString() === userId);
+            if(hasRated) {
+                return res.status(400).json({ message: 'Vous avez déjà donné une note à ce livre !'})
+            } else {
+                Book.findOneAndUpdate({ _id: req.params.id }, { $push: { ratings: {userId: req.body.userId, grade: req.body.rating} } })
+                    .then(() => { res.status(200).json({ message: 'Votre note a bien été enregistrée !' })})
+                    .catch(error => res.status(400).json({ error }));
+            }
         })
-        .catch(error => res.status(400).json({ error }))
+        .catch(error => res.status(500).json({ error }));    
 };
