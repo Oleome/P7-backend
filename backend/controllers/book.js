@@ -10,7 +10,7 @@ exports.createBook = (req, res, next) => {
     });
     book.save()
         .then(() => res.status(201).json({ message: 'Livre enregistré !'}))
-        .catch((error) => {res.status(400).json({ error: error })});
+        .catch((error) => {res.status(400).json({ error })});
 };
 
 exports.modifyBook = (req, res, next) => {
@@ -22,14 +22,14 @@ exports.modifyBook = (req, res, next) => {
 exports.getOneBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
         .then((book) => { res.status(200).json(book) })
-        .catch((error) => { res.status(404).json({ error: error });
+        .catch((error) => { res.status(404).json({ error });
     });
 };
 
 exports.getAllBooks = (req, res, next) => {
     Book.find()
         .then((books) => {res.status(200).json(books)})
-        .catch((error) => {res.status(400).json({ error: error })});
+        .catch((error) => {res.status(400).json({ error })});
 };
 
 exports.deleteOneBook = (req, res, next) => {
@@ -54,14 +54,21 @@ exports.deleteOneBook = (req, res, next) => {
 exports.addRating = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
         .then(book => {
-            const hasRated = book.ratings.some((rating) => rating.userId.toString() === userId);
+            const hasRated = book.ratings.some((rating) => rating.userId.toString() === req.auth.userId);
             if(hasRated) {
                 return res.status(400).json({ message: 'Vous avez déjà donné une note à ce livre !'})
             } else {
-                Book.findOneAndUpdate({ _id: req.params.id }, { $push: { ratings: {userId: req.body.userId, grade: req.body.rating} }, _id: req.params.id })
-                    .then(() => { res.status(200).json({ message: 'Votre note a bien été enregistrée !' })})
+                Book.findOneAndUpdate({ _id: req.params.id },
+                    { $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id})
+                    .then((book) => { res.status(200).json({id: book._id})})
                     .catch(error => res.status(400).json({ error }));
             }
         })
-        .catch(error => res.status(500).json({ error }));    
+        .catch(error => res.status(500).json({ error }));
 };
+
+/*exports.addRating = (req, res, next) => {
+    Book.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+        .then((book) => res.status(200).json({book, _id:req.params.id}))
+        .catch(error => res.status(400).json({ error }));
+};*/
