@@ -59,7 +59,7 @@ exports.addRating = (req, res, next) => {
                 return res.status(400).json({ message: 'Vous avez déjà donné une note à ce livre !'})
             } else {
                 Book.findOneAndUpdate({ _id: req.params.id },
-                    { $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id})
+                    { $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id })
                     .then((book) => { res.status(200).json({ book, _id: req.params.id })})
                     .catch(error => res.status(400).json({ error }));
             }
