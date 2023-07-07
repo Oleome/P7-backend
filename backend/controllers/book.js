@@ -58,8 +58,7 @@ exports.addRating = (req, res, next) => {
             if(hasRated) {
                 return res.status(400).json({ message: 'Vous avez déjà donné une note à ce livre !'})
             } else {
-                Book.findOneAndUpdate({ _id: req.params.id },
-                    { $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id })
+                Book.findOneAndUpdate({ _id: req.params.id },{ $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id })
                     .then((book) => { res.status(200).json({ book, _id: req.params.id })})
                     .catch(error => res.status(400).json({ error }));
             }
@@ -72,3 +71,7 @@ exports.addRating = (req, res, next) => {
         .then((book) => res.status(200).json({book, _id:req.params.id}))
         .catch(error => res.status(400).json({ error }));
 };*/
+
+exports.bestRating = (req, res, next) => {
+    console.log(req)
+}
