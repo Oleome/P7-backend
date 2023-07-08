@@ -51,24 +51,24 @@ exports.deleteOneBook = (req, res, next) => {
         });
 };
 
-exports.addRating = (req, res, next) => {
+exports.addRating = (req, res, next) => {  
     Book.findOne({ _id: req.params.id })
         .then(book => {
             const hasRated = book.ratings.some((rating) => rating.userId.toString() === req.body.userId);
-            if(hasRated) {
-                res.status(401).json({ message: 'Vous avez déjà donné une note !' });
+            if (hasRated) {
+                return res.status(401).json({ message: 'Vous avez déjà donné une note !' });
             } else {
-                function calcAverageGrade(arr) {
-                    let avr = Math.round((arr.reduce((acc, elem) => acc + elem.grade, 0) / arr.length) * 100) / 100;
-                    return avr;
-                  };
-                Book.findOneAndUpdate({ _id: req.params.id },{ $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id })
-                    .then((book) => res.status(200).json(book))
-                    .catch(error => res.status(400).json({ error }));
+                book.ratings.push({ userId: req.body.userId, grade: req.body.rating });
+                book.averageRating = book.calculateAverageRating();
+                return book.save()
+                    .then(updatedBook => {
+                        res.status(200).json(updatedBook);
+                    })
+                    .catch(error => res.status(400).json({ error }))
             }
         })
         .catch(error => res.status(500).json({ error }));
-};
+  };
 
 exports.bestRating = (req, res, next) => {
     console.log(req)

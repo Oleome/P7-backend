@@ -17,4 +17,17 @@ const booksSchema = mongoose.Schema({
     averageRating: {type: Number, required: false},
 });
 
+booksSchema.methods.calculateAverageRating = function () {
+    const totalRatings = this.ratings.length;
+  
+    if (totalRatings === 0) {
+      return 0; // Pas de notes, retourne une moyenne de 0
+    }
+  
+    const sumRatings = this.ratings.reduce((sum, rating) => sum + rating.grade, 0);
+    const averageRating = sumRatings / totalRatings;
+  
+    return averageRating;
+  };
+
 module.exports = mongoose.model('Book', booksSchema);
