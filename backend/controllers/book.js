@@ -56,8 +56,12 @@ exports.addRating = (req, res, next) => {
         .then(book => {
             const hasRated = book.ratings.some((rating) => rating.userId.toString() === req.body.userId);
             if(hasRated) {
-                return res.status(400).json({ error: 'Vous avez déjà donné une note à ce livre !'})
+                res.status(401).json({ message: 'Vous avez déjà donné une note !' });
             } else {
+                function calcAverageGrade(arr) {
+                    let avr = Math.round((arr.reduce((acc, elem) => acc + elem.grade, 0) / arr.length) * 100) / 100;
+                    return avr;
+                  };
                 Book.findOneAndUpdate({ _id: req.params.id },{ $push: {ratings: {userId: req.body.userId, grade: req.body.rating}}, _id: req.params.id })
                     .then((book) => res.status(200).json(book))
                     .catch(error => res.status(400).json({ error }));
