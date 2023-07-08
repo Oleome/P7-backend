@@ -69,8 +69,19 @@ exports.addRating = (req, res, next) => {
             }
         })
         .catch(error => res.status(500).json({ error }));
-  };
+};
+
+
 
 exports.bestRating = (req, res, next) => {
-    console.log(req)
-}
+    const bestRatingBooks = [];
+  
+    Book.find()
+        .sort({ averageRating: -1 }) 
+        .limit(3)
+            .then(books => {
+                bestRatingBooks.push(...books);
+                res.status(200).json(bestRatingBooks);
+            })
+            .catch(error => res.status(400).json({ error }));
+};
