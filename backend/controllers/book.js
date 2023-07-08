@@ -6,8 +6,9 @@ exports.createBook = (req, res, next) => {
     delete bookObject._userId;
     const book = new Book({
         ...bookObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     });
+    book.averageRating = book.calculateAverageRating();
     book.save()
         .then(() => res.status(201).json({ message: 'Livre enregistré !'}))
         .catch((error) => {res.status(400).json({ error })});
