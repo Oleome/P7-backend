@@ -74,14 +74,8 @@ exports.addRating = (req, res, next) => {
 
 
 exports.bestRating = (req, res, next) => {
-    const bestRatingBooks = [];
-  
-    Book.find()
-        .sort({ averageRating: -1 }) 
-        .limit(3)
-            .then(books => {
-                bestRatingBooks.push(...books);
-                res.status(200).json(bestRatingBooks);
-            })
-            .catch(error => res.status(400).json({ error }));
+    Book.find().sort({ averageRating: -1 }).limit(3)
+        .then((books) => res.status(200).json(books))
+        .catch((error) => res.status(500).json({ error }))
 };
+

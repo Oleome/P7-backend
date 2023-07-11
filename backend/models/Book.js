@@ -21,7 +21,7 @@ booksSchema.methods.calculateAverageRating = function () {
     const totalRatings = this.ratings.length;
   
     if (totalRatings === 0) {
-      return 0; // Pas de notes, retourne une moyenne de 0
+      return 0; 
     }
   
     const sumRatings = this.ratings.reduce((sum, rating) => sum + rating.grade, 0);

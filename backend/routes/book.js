@@ -8,12 +8,12 @@ const multer = require('../middleware/multer-config');
 
 const fs = require('fs');
 
-router.get('/:id', bookCtrl.getOneBook);
+router.get('/bestrating', bookCtrl.bestRating);
 router.get('/', bookCtrl.getAllBooks);
 router.post('/', auth, multer, bookCtrl.createBook);
+router.get('/:id', bookCtrl.getOneBook);
 router.put('/:id', auth, multer, bookCtrl.modifyBook);
 router.delete('/:id', auth, bookCtrl.deleteOneBook);
 router.post('/:id/rating', auth, bookCtrl.addRating);
-router.get('/bestrating', bookCtrl.bestRating);
 
 module.exports = router;
