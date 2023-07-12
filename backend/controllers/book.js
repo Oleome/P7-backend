@@ -6,6 +6,7 @@ exports.createBook = (req, res, next) => {
     let bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
+    console.log(req.file)
     const book = new Book({
         ...bookObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
