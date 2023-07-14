@@ -6,6 +6,7 @@ exports.createBook = (req, res, next) => {
     delete bookObject._id;
     delete bookObject._userId;
     console.log(req.file)
+    console.log(req.file.filename)
     const book = new Book({
         ...bookObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
