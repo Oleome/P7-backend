@@ -1,14 +1,19 @@
 const Book = require('../models/Book');
 const fs = require('fs');
+const compressImg = require('../middleware/compress-img');
 
-exports.createBook = (req, res, next) => {
+exports.createBook = async (req, res, next) => {
+    console.log('compressImg',compressImg)
     let bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
-    console.log(req.file)
+    console.log('req.file',req.file);
+    const compressedImg = await compressImg(req.file.buffer);
+    console.log(compressedImg)
     const book = new Book({
         ...bookObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+       /*  imageUrl: `${req.protocol}://${req.get('host')}/images/${compressedImg}`, */
+        imageUrl: compressedImg,
     });
     book.averageRating = book.calculateAverageRating();
     book.save()
