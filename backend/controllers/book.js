@@ -3,7 +3,7 @@ const fs = require('fs');
 const compressImg = require('../utils/compress-img');
 const rewriteImageUrl = require('../utils/rewrite-image-url');
 
-exports.createBook = async (req, res, next) => {
+exports.createBook = async (req, res) => {
     let bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
@@ -18,13 +18,13 @@ exports.createBook = async (req, res, next) => {
         .catch((error) => {res.status(400).json({ error })});
 };
 
-exports.modifyBook = (req, res, next) => {
+exports.modifyBook = (req, res) => {
     Book.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Livre modifié !'}))
         .catch(error => res.status(400).json({ error }));
 };
 
-exports.getOneBook = (req, res, next) => {
+exports.getOneBook = (req, res) => {
     Book.findOne({ _id: req.params.id })
         .then((book) => {
             return rewriteImageUrl(req, book)
@@ -34,7 +34,7 @@ exports.getOneBook = (req, res, next) => {
     });
 };
 
-exports.getAllBooks = (req, res, next) => {
+exports.getAllBooks = (req, res) => {
     Book.find()
         .then((books) => {
             return books.map((book) => rewriteImageUrl(req, book)) 
@@ -43,7 +43,7 @@ exports.getAllBooks = (req, res, next) => {
         .catch((error) => {res.status(400).json({ error })});
 };
 
-exports.deleteOneBook = (req, res, next) => {
+exports.deleteOneBook = (req, res) => {
     Book.findOne({ _id: req.params.id })
         .then((book) => {
             if(book.userId != req.auth.userId) {
@@ -62,7 +62,7 @@ exports.deleteOneBook = (req, res, next) => {
         });
 };
 
-exports.addRating = (req, res, next) => {  
+exports.addRating = (req, res) => {  
     Book.findOne({ _id: req.params.id })
         .then(book => {
             const hasRated = book.ratings.some((rating) => rating.userId.toString() === req.body.userId);
@@ -83,7 +83,7 @@ exports.addRating = (req, res, next) => {
 
 
 
-exports.bestRating = (req, res, next) => {
+exports.bestRating = (req, res) => {
     Book.find().sort({ averageRating: -1 }).limit(3)
         .then((books) => {
             return books.map((book) => rewriteImageUrl(req, book)) 
