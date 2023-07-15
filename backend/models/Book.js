@@ -25,7 +25,7 @@ booksSchema.methods.calculateAverageRating = function () {
     }
   
     const sumRatings = this.ratings.reduce((sum, rating) => sum + rating.grade, 0);
-    const averageRating = sumRatings / totalRatings;
+    const averageRating = Math.round(sumRatings / totalRatings);
   
     return averageRating;
   };

@@ -1,19 +1,15 @@
 const Book = require('../models/Book');
 const fs = require('fs');
-const compressImg = require('../middleware/compress-img');
+const compressImg = require('../utils/compress-img');
 const rewriteImageUrl = require('../utils/rewrite-image-url');
 
 exports.createBook = async (req, res, next) => {
-    console.log('compressImg',compressImg)
     let bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
-    console.log('req.file',req.file);
     const compressedImg = await compressImg(req.file.buffer);
-    console.log(compressedImg)
     const book = new Book({
         ...bookObject,
-       /*  imageUrl: `${req.protocol}://${req.get('host')}/images/${compressedImg}`, */
         imageUrl: compressedImg,
     });
     book.averageRating = book.calculateAverageRating();
@@ -89,6 +85,9 @@ exports.addRating = (req, res, next) => {
 
 exports.bestRating = (req, res, next) => {
     Book.find().sort({ averageRating: -1 }).limit(3)
+        .then((books) => {
+            return books.map((book) => rewriteImageUrl(req, book)) 
+        })
         .then((books) => res.status(200).json(books))
         .catch((error) => res.status(500).json({ error }))
 };
