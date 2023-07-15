@@ -1,6 +1,7 @@
 const Book = require('../models/Book');
 const fs = require('fs');
 const compressImg = require('../middleware/compress-img');
+const rewriteImageUrl = require('../utils/rewrite-image-url');
 
 exports.createBook = async (req, res, next) => {
     console.log('compressImg',compressImg)
@@ -29,6 +30,9 @@ exports.modifyBook = (req, res, next) => {
 
 exports.getOneBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
+        .then((book) => {
+            return rewriteImageUrl(req, book)
+        })
         .then((book) => { res.status(200).json(book) })
         .catch((error) => { res.status(404).json({ error });
     });
@@ -36,6 +40,9 @@ exports.getOneBook = (req, res, next) => {
 
 exports.getAllBooks = (req, res, next) => {
     Book.find()
+        .then((books) => {
+            return books.map((book) => rewriteImageUrl(req, book)) 
+        })
         .then((books) => {res.status(200).json(books)})
         .catch((error) => {res.status(400).json({ error })});
 };
