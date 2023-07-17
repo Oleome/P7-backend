@@ -28,7 +28,6 @@ exports.modifyBook = async (req, res) => {
                 const filename = book.imageUrl;
                 fs.unlink(`images/${filename}`, () => {                 
                     Book.updateOne({ _id: req.params.id }, { ...req.body, imageUrl: newImg, _id: req.params.id })
-                        .then(() => fs.unlink(`images/${actualImg}`))
                         .then(() => res.status(200).json({ message: 'Livre modifié !'}))
                         .catch(error => res.status(400).json({ error }));
                 })
