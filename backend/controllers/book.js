@@ -49,7 +49,7 @@ exports.deleteOneBook = (req, res) => {
             if(book.userId != req.auth.userId) {
             res.status(401).json({ message: 'Non autorisé !' });
             } else {
-            const filename = book.imageUrl.split('/images/')[1];
+            const filename = book.imageUrl;
             fs.unlink(`images/${filename}`, () => {
                 Book.deleteOne({ _id: req.params.id })
                 .then(() => res.status(200).json({ message: 'Livre supprimé !'}))
