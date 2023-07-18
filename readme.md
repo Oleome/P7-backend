@@ -1,4 +1,4 @@
-# Au vieux grimoire
+# Mon vieux grimoire
 Projet 7 formation développeur web: Développez le back-end d'un site de notation de livres
 
 ## 1. Installation :
